@@ -1,0 +1,21 @@
+# Ignore virtual environment
+env/
+
+# Byte-compiled / cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Project configs
+*.sqlite3
+*.egg-info/
+.vscode/
+.idea/
+
+# Mac/Linux junk
+.DS_Store
