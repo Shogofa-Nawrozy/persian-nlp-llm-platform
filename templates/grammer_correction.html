@@ -1,0 +1,55 @@
+{% include 'include/header.html' %}
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Part of Speech</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">Sarter Page</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <section id="grammar-section" class="starter-section section">
+      <div class="container" style="max-width:700px;">
+        <div class="card p-4 shadow-sm">
+          <h2 class="mb-3">Grammar Correction</h2>
+          <label for="grammar-input" class="mb-2"><strong>Enter your text:</strong></label>
+          <textarea id="grammar-input" class="form-control mb-3" rows="6" placeholder="Type or paste your text here..."></textarea>
+          <button 
+            style="background-color: #10bc69; color: #fff; border: none; padding: 10px 28px; border-radius: 4px; font-size: 1.1rem;"
+            onclick="checkGrammar()"
+          >
+            ✔️ Check Grammar
+          </button>
+          <div id="grammar-result" class="mt-4 p-3" style="background:#f8f9fa; border-radius:6px; min-height:60px; border:1px solid #e0e0e0;">
+            <span style="color:#888;">Corrected text will appear here.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+    function checkGrammar() {
+      const input = document.getElementById('grammar-input').value;
+      // For demo, just capitalize the first letter and add a period.
+      // Replace this with an AJAX call to your backend for real correction.
+      let corrected = input.trim();
+      if (corrected.length > 0) {
+        corrected = corrected.charAt(0).toUpperCase() + corrected.slice(1);
+        if (!/[.!?]$/.test(corrected)) corrected += '.';
+        document.getElementById('grammar-result').innerText = corrected;
+      } else {
+        document.getElementById('grammar-result').innerHTML = '<span style="color:#888;">Corrected text will appear here.</span>';
+      }
+    }
+    </script>
+
+  </main>
+
+{% include 'include/footer.html' %}

@@ -1,0 +1,100 @@
+{% include 'include/header.html' %}
+
+<style>
+.summarizer-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  margin: 60px auto;
+  max-width: 1100px;
+  width: 100%;
+}
+.summarizer-panel {
+  flex: 1;
+  background: #fff;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  min-height: 340px;
+}
+.summarizer-panel label {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.summarizer-panel textarea {
+  width: 100%;
+  min-height: 180px;
+  resize: vertical;
+  border: 1px solid #ccc;
+  padding: 12px;
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  background: #fff;
+}
+.summarizer-panel .btn-summarize {
+  background: #10bc69;
+  color: #fff;
+  border: none;
+  padding: 10px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+.summarizer-panel .btn-summarize:hover {
+  background: #0e9e59;
+}
+.summarizer-result {
+  min-height: 180px;
+  border: 1px solid #ccc;
+  padding: 12px;
+  font-size: 1.1rem;
+  color: #222;
+  white-space: pre-wrap;
+}
+@media (max-width: 900px) {
+  .summarizer-container {
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 8px;
+  }
+}
+</style>
+
+<main class="main">
+  <div class="summarizer-container">
+    <!-- Left: Input -->
+    <div class="summarizer-panel">
+      <label for="summarizer-input"><strong>Enter your text:</strong></label>
+      <textarea id="summarizer-input" placeholder="Paste or type your text here..."></textarea>
+      <button class="btn-summarize" onclick="summarizeText()">Summarize</button>
+    </div>
+    <!-- Right: Output -->
+    <div class="summarizer-panel">
+      <label for="summarizer-result"><strong>Summary:</strong></label>
+      <div id="summarizer-result" class="summarizer-result">
+        The summary will appear here.
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+function summarizeText() {
+  const input = document.getElementById('summarizer-input').value;
+  // For demo, just show the first 20 words. Replace with AJAX call to your backend.
+  if (input.trim()) {
+    const words = input.trim().split(/\s+/);
+    let summary = words.slice(0, 20).join(' ');
+    if (words.length > 20) summary += '...';
+    document.getElementById('summarizer-result').innerText = summary;
+  } else {
+    document.getElementById('summarizer-result').innerText = 'The summary will appear here.';
+  }
+}
+</script>
+
+{% include 'include/footer.html' %}

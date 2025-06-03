@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Persian NLP Platform</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+        textarea {
+            width: 100%;
+            max-width: 600px;
+        }
+        button {
+            margin-right: 10px;
+            padding: 5px 15px;
+        }
+        .output-section {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .output-section b {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Persian NLP Platform</h1>
+
+    <textarea id="inputText" rows="4" placeholder="Type your Persian text here..."></textarea><br><br>
+
+    <button onclick="tokenizeText()">Tokenize</button>
+    <button onclick="posTagText()">POS Tagging</button>
+    <button onclick="nerTagText()">NER</button>
+
+    <div id="output" class="output-section"></div>
+
+
+
+<button onclick="correctGrammar()">Grammar Correction</button>
+<button onclick="rephraseSentence()">Rephrase</button>
+
+
+    <script>
+        async function tokenizeText() {
+            const inputText = document.getElementById('inputText').value;
+
+            const response = await fetch('http://127.0.0.1:5000/tokenize', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: inputText })
+            });
+
+            const data = await response.json();
+            const tokensList = data.tokens;
+
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = `<b>Tokens:</b>${tokensList.join(', ')}`;
+        }
+
+        async function posTagText() {
+            const inputText = document.getElementById('inputText').value;
+
+            const response = await fetch('http://127.0.0.1:5000/pos-tag', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: inputText })
+            });
+
+            const data = await response.json();
+            const posTagsList = data.pos_tags;
+
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = `<b>POS Tags:</b>${posTagsList.map(tag => `${tag[0]} → ${tag[1]}`).join('<br>')}`;
+        }
+
+        async function nerTagText() {
+            const inputText = document.getElementById('inputText').value;
+
+            const response = await fetch('http://127.0.0.1:5000/ner', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: inputText })
+            });
+
+            const data = await response.json();
+            const nerTagsList = data.ner_tags;
+
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = `<b>NER:</b>${nerTagsList.map(tag => `${tag[0]} → ${tag[1]}`).join('<br>')}`;
+        }
+
+          async function correctGrammar() {
+        const inputText = document.getElementById('inputText').value;
+        const response = await fetch('/grammar-correct', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: inputText })
+        });
+        const data = await response.json();
+        document.getElementById('output').innerHTML = "<b>Corrected:</b><br>" + data.corrected;
+    }
+
+    async function rephraseSentence() {
+        const inputText = document.getElementById('inputText').value;
+        const response = await fetch('/rephrase', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: inputText })
+        });
+        const data = await response.json();
+        document.getElementById('output').innerHTML = "<b>Rephrased:</b><br>" + data.rephrased;
+    }
+    </script>
+</body>
+</html>

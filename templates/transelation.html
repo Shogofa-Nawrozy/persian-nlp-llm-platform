@@ -1,0 +1,102 @@
+{% include 'include/header.html' %}
+
+<style>
+  .translation-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    width: 100%;
+    max-width: 1200px;
+  }
+  .translation-box {
+    width: 50%;
+    min-height: 300px;
+    background: none;
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  .translation-box textarea {
+    width: 100%;
+    min-height: 220px;
+    resize: vertical;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-bottom: 16px;
+    font-size: 1rem;
+    background: #fff;
+  }
+  .translation-box .btn-translate {
+    align-self: flex-end;
+    padding: 8px 24px;
+    background-color: #10bc69; 
+    color: #fff; 
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  .translation-result {
+    min-height: 220px;
+    padding: 10px;
+    background: #fff;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    color: #333;
+    width: 100%;
+    box-sizing: border-box;
+  }
+</style>
+
+
+<main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Translation</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">Translation Page</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+  <div class="container">
+    <div class="col-lg-12 ">
+    <div class="translation-container">
+      <!-- Left: Input -->
+      <div class="translation-box">
+        <label for="source-text"><strong>Enter your text:</strong></label>
+        <textarea id="source-text" placeholder="Type your text here..."></textarea>
+        <button class="btn-translate" onclick="translateText()">Translate</button>
+      </div>
+      <!-- Right: Output -->
+      <div class="translation-box">
+        <label for="translated-text"><strong>Translation:</strong></label>
+        <div id="translated-text" class="translation-result"></div>
+      </div>
+    </div>
+  </div>
+  </div>
+</main>
+
+<script>
+  // Dummy translation for demo. Replace with AJAX call to your backend.
+  function translateText() {
+    const input = document.getElementById('source-text').value;
+    // For demo, just reverse the text. Replace with real translation logic.
+    document.getElementById('translated-text').innerText = input.split('').reverse().join('');
+  }
+</script>
+
+{% include 'include/footer.html' %}

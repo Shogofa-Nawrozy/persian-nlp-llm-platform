@@ -1,0 +1,94 @@
+{% include 'include/header.html' %}
+
+
+<style>
+
+  .search-container {
+    display: block;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  #search-bar {
+    padding: 10px 80px 10px 80px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    
+  }
+
+  .search-icon {
+    width: 60px;
+    height: 60px;
+    margin-left: -15px;
+  }
+
+</style>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Part of Speech</h1>
+        <form class="search-container">
+          <input type="text" id="search-bar" placeholder="Type here ...">
+          <a href="#"><img class="search-icon" src="http://www.endlessicons.com/wp-content/uploads/2012/12/search-icon.png"></a>
+        </form>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">Part of Speech</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- POS Tagging Section -->
+    <section id="portfolio-details" class="portfolio-details section">
+
+      <div class="container">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-4">
+            <div>
+              <h3>Sentence declaration</h3>
+              <ul>
+                <li><strong>Nouns</strong>: Web design</li>
+                <li><strong>Adjectives</strong>: Beautiful</li>
+                <li><strong>Pronouns</strong>: you</li>
+                <li><strong>Verbs</strong>: is</li>
+              </ul>
+            </div>
+            <div class="portfolio-description">
+              <h2>Explanation</h2>
+              <p>
+                Autem ipsum nam porro corporis rerum. Quis eos dolorem eos itaque inventore commodi labore quia quia. Exercitationem repudiandae officiis neque suscipit non officia eaque itaque enim. Voluptatem officia accusantium nesciunt est omnis tempora consectetur dignissimos. Sequi nulla at esse enim cum deserunt eius.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-8">
+            <div class="portfolio-details-slider swiper init-swiper">
+
+              <div class="swiper-wrapper align-items-center">
+
+                <div class="swiper-slide">
+                  <img src="{{ url_for('static', filename='assets/img/portfolio/app-1.jpg') }}" alt="">
+                </div>
+
+              </div>
+              <div class="swiper-pagination"></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+    <!-- End POS Tagging Section -->
+
+  </main>
+
+{% include 'include/footer.html' %}

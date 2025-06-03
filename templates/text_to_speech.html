@@ -1,0 +1,53 @@
+{% include 'include/header.html' %}
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Part of Speech</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">Sarter Page</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <section id="starter-section" class="starter-section section">
+  <div class="container" style="max-width:600px;">
+    <div class="card p-4 shadow-sm">
+      <h2 class="mb-3">Text to Speech</h2>
+      <label for="tts-text" class="mb-2"><strong>Enter text:</strong></label>
+      <textarea id="tts-text" class="form-control mb-3" rows="5" placeholder="Type or paste your text here..."></textarea>
+      <div class="d-flex align-items-center mb-3">
+        <label for="tts-lang" class="me-2"><strong>Language:</strong></label>
+        <select id="tts-lang" class="form-select" style="width:auto;">
+          <option value="en-US">English</option>
+          <option value="fa-IR">Persian</option>
+          <!-- Add more languages as needed -->
+        </select>
+      </div>
+        <button class="btn btn-primary" style="background-color: #10bc69; color: #fff; border: none;" onclick="speakText()"> 🔊 Speak</button>
+    </div>
+  </div>
+</section>
+
+<script>
+function speakText() {
+  const text = document.getElementById('tts-text').value;
+  const lang = document.getElementById('tts-lang').value;
+  if ('speechSynthesis' in window) {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = lang;
+    window.speechSynthesis.speak(utter);
+  } else {
+    alert('Sorry, your browser does not support text-to-speech.');
+  }
+}
+</script>
+
+  </main>
+
+{% include 'include/footer.html' %}
