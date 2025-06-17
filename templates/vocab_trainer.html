@@ -36,8 +36,8 @@
         </form>
         <nav class="breadcrumbs">
           <ol>
-            <li><a href="index.html">Home</a></li>
-            <li class="current">Vocab Trainer</li>
+            <li><a href="index.html">Go to</a></li>
+            <li class="current">My PersianBrain</li>
           </ol>
         </nav>
       </div>
@@ -51,6 +51,8 @@
         <p><strong>Phonetic:</strong> /ɪɡˈzɑːmpəl/</p>
         <button onclick="document.getElementById('audio-example').play()">🔊 Hear Pronunciation</button>
         <audio id="audio-example" src="{{ url_for('static', filename='audio/example.mp3') }}"></audio>
+
+        <button type="submit" class="btn btn-success">Add to My PersianBrain</button>
       </div>
 
         <div class="container" style="margin-top: 40px;">
@@ -64,6 +66,8 @@
 
     </section><!-- /Starter Section Section -->
 
+
+    
   </main>
 
 {% include 'include/footer.html' %}
