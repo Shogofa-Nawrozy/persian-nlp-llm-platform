@@ -1,11 +1,17 @@
-from flair.data import Sentence
-from flair.models import SequenceTagger
+import stanza
 
-# Load the Persian POS tagger from Flair
-tagger = SequenceTagger.load("hamedkhaledi/persian-flair-pos")
+nlp = stanza.Pipeline(lang='fa', processors='tokenize,pos,depparse')
 
 def pos_tag_text(text):
-    sentence = Sentence(text)
-    tagger.predict(sentence)
-    result = [(token.text, token.get_label("pos").value) for token in sentence]
+    doc = nlp(text)
+    result = []
+    for sentence in doc.sentences:
+        for word in sentence.words:
+            result.append({
+                'id': word.id,
+                'text': word.text,
+                'pos': word.xpos,
+                'head': word.head,
+                'deprel': word.deprel
+            })
     return result

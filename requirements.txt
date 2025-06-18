@@ -1,5 +1,5 @@
+transformers
+torch
+stanza
 flask
 flask-cors
-# transformers
-# torch
-# flair

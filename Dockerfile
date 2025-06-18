@@ -8,7 +8,10 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of your project (including static and templates)
+# Download Stanza models via Python script
+RUN python -c "import stanza; stanza.download('fa')"
+
+# Copy the rest of your project
 COPY . .
 
 EXPOSE 5000
