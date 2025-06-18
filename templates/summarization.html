@@ -118,19 +118,26 @@
   </div>
 </main>
 
+
 <script>
 function summarizeText() {
   const input = document.getElementById('summarizer-input').value;
-  // For demo, just show the first 20 words. Replace with AJAX call to your backend.
-  if (input.trim()) {
-    const words = input.trim().split(/\s+/);
-    let summary = words.slice(0, 20).join(' ');
-    if (words.length > 20) summary += '...';
-    document.getElementById('summarizer-result').innerText = summary;
-  } else {
-    document.getElementById('summarizer-result').innerText = 'The summary will appear here.';
-  }
+
+  fetch('/summarize', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({text: input})
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('summarizer-result').innerText = data.summary || "No summary returned.";
+  })
+  .catch(err => {
+    console.error("Error during summarization:", err);
+    document.getElementById('summarizer-result').innerText = "An error occurred.";
+  });
 }
 </script>
+
 
 {% include 'include/footer.html' %}

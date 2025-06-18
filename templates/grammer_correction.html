@@ -35,19 +35,12 @@
     </section>
 
     <script>
-    function checkGrammar() {
-      const input = document.getElementById('grammar-input').value;
-      // For demo, just capitalize the first letter and add a period.
-      // Replace this with an AJAX call to your backend for real correction.
-      let corrected = input.trim();
-      if (corrected.length > 0) {
-        corrected = corrected.charAt(0).toUpperCase() + corrected.slice(1);
-        if (!/[.!?]$/.test(corrected)) corrected += '.';
-        document.getElementById('grammar-result').innerText = corrected;
-      } else {
-        document.getElementById('grammar-result').innerHTML = '<span style="color:#888;">Corrected text will appear here.</span>';
-      }
-    }
+      fetch('/grammar-correct', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ text: input })
+      })
+
     </script>
 
   </main>
