@@ -66,7 +66,56 @@
 
     </section><!-- /Starter Section Section -->
 
+<script>
+  const BASE_API = "https://abc123.ngrok-free.app/translate";  // 🔁 Replace with your actual ngrok URL
 
+  document.querySelector('.search-container').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const word = document.getElementById("search-bar").value.trim();
+    if (!word) {
+      alert("Please enter a word to search.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${BASE_API}/vocab-usage`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ text: word })
+      });
+
+      if (!response.ok) {
+        throw new Error("Server error");
+      }
+
+      const data = await response.json();
+      updateVocabUI(word, data.usages);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Failed to fetch usage examples.");
+    }
+  });
+
+  function updateVocabUI(word, usages) {
+    document.querySelector('#starter-section h5').innerHTML = `Word: <strong>${word}</strong>`;
+
+    const usageList = document.querySelector('#starter-section ul');
+    usageList.innerHTML = '';
+
+    usages.forEach(u => {
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>${u.entity}:</strong> ${u.word}`;
+      usageList.appendChild(li);
+    });
+
+    // Optional: update audio if available
+    const audio = document.getElementById('audio-example');
+    audio.src = `${BASE_API}/static/audio/${word}.mp3`;  // You can change this logic
+  }
+</script>
     
   </main>
 

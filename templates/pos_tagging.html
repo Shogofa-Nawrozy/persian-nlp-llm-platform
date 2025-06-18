@@ -103,7 +103,7 @@ function submitText(event) {
   event.preventDefault();
   const input = document.getElementById('search-bar').value;
 
-  fetch('/pos-tag', {
+  fetch('/https://abc123.ngrok-free.app/pos-tag', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({text: input})

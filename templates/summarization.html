@@ -123,7 +123,8 @@
 function summarizeText() {
   const input = document.getElementById('summarizer-input').value;
 
-  fetch('/summarize', {
+  // fetch('/summarize', {
+  fetch("https://ac98-35-196-252-134.ngrok-free.app/summarize", {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({text: input})
