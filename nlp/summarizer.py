@@ -2,7 +2,8 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
 # Load once (global)
 model_name = "nafisehNik/mt5-persian-summary"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=False)
 model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 
 def summarize(text):

@@ -3,3 +3,4 @@ torch
 stanza
 flask
 flask-cors
+sentencepiece
