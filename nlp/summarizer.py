@@ -1,4 +1,4 @@
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+#from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
 model_name = "nafisehNik/mt5-persian-summary"
 tokenizer = AutoTokenizer.from_pretrained(model_name)

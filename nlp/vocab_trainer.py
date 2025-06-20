@@ -1,4 +1,4 @@
-from transformers import pipeline
+#from transformers import pipeline
 
 # Placeholder: you can later use a Persian-specific model
 pos_pipeline = pipeline("token-classification", model="HooshvareLab/bert-fa-base-ner", aggregation_strategy="simple")

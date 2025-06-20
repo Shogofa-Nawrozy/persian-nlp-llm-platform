@@ -78,11 +78,11 @@ def translation_route():
     response = requests.post(f"{COLAB_API_BASE}/translate", json={'text': text})
     return jsonify(response.json())
 
-@app.route('/grammar-correct', methods=['POST'])
-def grammar_route():
-    text = request.json.get('text', '')
-    response = requests.post(f"{COLAB_API_BASE}/grammar-correct", json={'text': text})
-    return jsonify(response.json())
+# @app.route('/grammar-correct', methods=['POST'])
+# def grammar_route():
+#     text = request.json.get('text', '')
+#     response = requests.post(f"{COLAB_API_BASE}/grammar-correct", json={'text': text})
+#     return jsonify(response.json())
 
 @app.route('/summarize', methods=['POST'])
 def do_summarize():
