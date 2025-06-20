@@ -12,7 +12,7 @@ from nlp.vocab_trainer import find_usages
 import requests
 
 # Replace this with your actual ngrok URL from Colab
-COLAB_API_BASE = "https://abc123.ngrok-free.app"
+COLAB_API_BASE = "https://6432-34-86-69-3.ngrok-free.app"
 
 app = Flask(__name__)
 CORS(app)
