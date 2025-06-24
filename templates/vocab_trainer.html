@@ -1,122 +1,112 @@
 {% include 'include/header.html' %}
 
-
 <style>
-
   .search-container {
-    display: block;
+    display: flex;
     align-items: center;
     margin-top: 20px;
+    gap: 10px;
   }
 
   #search-bar {
+    flex: 1;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    
   }
 
   .search-icon {
-    width: 60px;
-    height: 60px;
-    margin-left: -15px;
+    width: 48px;
+    height: 48px;
+    border: none;
+    background: none;
+    cursor: pointer;
   }
-
 </style>
 
-  <main class="main">
+<main class="main">
+  <!-- Page Title -->
+  <div class="page-title">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+      <h1 class="mb-2 mb-lg-0">Your Vocab Trainer</h1>
+      <form class="search-container" onsubmit="submitSearch(event)">
+        <input type="text" id="search-bar" placeholder="Search your word here?">
+        <button type="submit" class="search-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="gray" viewBox="0 0 24 24">
+            <path d="M10 2a8 8 0 105.29 14.29l5.41 5.41 1.41-1.41-5.41-5.41A8 8 0 0010 2zm0 2a6 6 0 110 12A6 6 0 0110 4z"/>
+          </svg>
+        </button>
+      </form>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="index.html">Go to</a></li>
+          <li class="current">My PersianBrain</li>
+        </ol>
+      </nav>
+    </div>
+  </div><!-- End Page Title -->
 
-    <!-- Page Title -->
-    <div class="page-title">
-      <div class="container d-lg-flex justify-content-between align-items-center">
-        <h1 class="mb-2 mb-lg-0">Your Vocab Trainer</h1>
-        <form class="search-container">
-          <input type="text" id="search-bar" placeholder="Search your word here?">
-          <a href="#"><img class="search-icon" src="http://www.endlessicons.com/wp-content/uploads/2012/12/search-icon.png"></a>
-        </form>
-        <nav class="breadcrumbs">
-          <ol>
-            <li><a href="index.html">Go to</a></li>
-            <li class="current">My PersianBrain</li>
-          </ol>
-        </nav>
-      </div>
-    </div><!-- End Page Title -->
+  <section id="starter-section" class="starter-section section">
+    <div class="container">
+      <h5>Word: <strong id="word-label">example</strong></h5>
+      <p><strong>Example Sentence:</strong> <span id="example-sentence">This is an <b>example</b> of how to use the word in a sentence.</span></p>
+      <p><strong>Phonetic:</strong> <span id="phonetic-text">/ɪɡˈzɑːmpəl/</span></p>
+      <button onclick="document.getElementById('audio-example').play()">🔊 Hear Pronunciation</button>
+      <audio id="audio-example" src="{{ url_for('static', filename='audio/example.mp3') }}"></audio>
+      <button type="submit" class="btn btn-success">Add to My PersianBrain</button>
+    </div>
 
-    <!-- Starter Section Section -->
-    <section id="starter-section" class="starter-section section">
-      <div class="container">
-        <h5>Word: <strong>example</strong></h5>
-        <p><strong>Example Sentence:</strong> This is an <b>example</b> of how to use the word in a sentence.</p>
-        <p><strong>Phonetic:</strong> /ɪɡˈzɑːmpəl/</p>
-        <button onclick="document.getElementById('audio-example').play()">🔊 Hear Pronunciation</button>
-        <audio id="audio-example" src="{{ url_for('static', filename='audio/example.mp3') }}"></audio>
+    <div class="container" style="margin-top: 40px;">
+      <h4>Usage in Different Sentences</h4>
+      <ul id="usage-list">
+        <li><strong>Noun:</strong> This is an <b>example</b> of how to use the word in a sentence.</li>
+        <li><strong>Adjective:</strong> She gave an <b>exemplary</b> performance. (related form)</li>
+        <li><strong>Verb:</strong> The teacher <b>exemplified</b> the concept with a diagram. (related form)</li>
+      </ul>
+    </div>
+  </section>
 
-        <button type="submit" class="btn btn-success">Add to My PersianBrain</button>
-      </div>
+  <script>
+    async function submitSearch(event) {
+      event.preventDefault();
+      const word = document.getElementById("search-bar").value.trim();
+      if (!word) return alert("Please enter a word.");
 
-        <div class="container" style="margin-top: 40px;">
-          <h4>Usage in Different Sentences</h4>
-          <ul>
-            <li><strong>Noun:</strong> This is an <b>example</b> of how to use the word in a sentence.</li>
-            <li><strong>Adjective:</strong> She gave an <b>exemplary</b> performance. (related form)</li>
-            <li><strong>Verb:</strong> The teacher <b>exemplified</b> the concept with a diagram. (related form)</li>
-          </ul>
-        </div>
+      try {
+        const res = await fetch('/vocab-usage', {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: word })
+        });
 
-    </section><!-- /Starter Section Section -->
+        if (!res.ok) throw new Error("Failed to fetch");
 
-<script>
-  const BASE_API = "https://abc123.ngrok-free.app/translate";  // 🔁 Replace with your actual ngrok URL
-
-  document.querySelector('.search-container').addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const word = document.getElementById("search-bar").value.trim();
-    if (!word) {
-      alert("Please enter a word to search.");
-      return;
-    }
-
-    try {
-      const response = await fetch(`${BASE_API}/vocab-usage`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ text: word })
-      });
-
-      if (!response.ok) {
-        throw new Error("Server error");
+        const data = await res.json();
+        updateVocabUI(word, data);
+      } catch (err) {
+        console.error(err);
+        alert("Error fetching word data.");
       }
-
-      const data = await response.json();
-      updateVocabUI(word, data.usages);
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Failed to fetch usage examples.");
     }
+
+    function updateVocabUI(word, data) {
+  document.getElementById("word-label").innerText = `${word} / ${data.persian}`;
+  document.getElementById("example-sentence").innerText = data.example_en;
+  document.getElementById("phonetic-text").innerText = data.phonetic || "—";
+
+  const audio = document.getElementById("audio-example");
+  if (data.audio) audio.src = data.audio;
+
+  const usageList = document.getElementById("usage-list");
+  usageList.innerHTML = "";
+  (data.usages || []).forEach(item => {
+    const li = document.createElement("li");
+    li.innerHTML = `<strong>${item.pos}:</strong> ${item.sentence_en}<br><em>${item.sentence_fa}</em>`;
+    usageList.appendChild(li);
   });
+}
 
-  function updateVocabUI(word, usages) {
-    document.querySelector('#starter-section h5').innerHTML = `Word: <strong>${word}</strong>`;
-
-    const usageList = document.querySelector('#starter-section ul');
-    usageList.innerHTML = '';
-
-    usages.forEach(u => {
-      const li = document.createElement('li');
-      li.innerHTML = `<strong>${u.entity}:</strong> ${u.word}`;
-      usageList.appendChild(li);
-    });
-
-    // Optional: update audio if available
-    const audio = document.getElementById('audio-example');
-    audio.src = `${BASE_API}/static/audio/${word}.mp3`;  // You can change this logic
-  }
-</script>
-    
-  </main>
+  </script>
+</main>
 
 {% include 'include/footer.html' %}

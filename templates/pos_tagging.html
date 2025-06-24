@@ -1,140 +1,204 @@
 {% include 'include/header.html' %}
 
-
 <style>
-
   .search-container {
-    display: block;
+    display: flex;
     align-items: center;
     margin-top: 20px;
+    gap: 10px;
   }
 
   #search-bar {
-    padding: 10px 80px 10px 80px;
+    flex: 1;
+    padding: 12px 16px;
     border: 1px solid #ccc;
-    border-radius: 4px;
-    
+    border-radius: 8px;
+    font-size: 16px;
+    direction: rtl;
   }
 
   .search-icon {
-    width: 60px;
-    height: 60px;
-    margin-left: -15px;
+    width: 48px;
+    height: 48px;
+    border: none;
+    background: none;
+    cursor: pointer;
   }
 
+  .sentence-pos ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  .sentence-pos ul li {
+    margin-bottom: 6px;
+    font-size: 15px;
+  }
+
+  .portfolio-description p {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  #tree-container {
+    height: 600px;
+    margin-top: -150px;
+    border-radius: 0;
+    background: #ffffff;
+  }
 </style>
 
-  <main class="main">
+<main class="main">
+  <div class="page-title">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+      <h1 class="mb-2 mb-lg-0">Part of Speech</h1>
+      <form class="search-container" onsubmit="submitText(event)">
+        <input type="text" id="search-bar" placeholder="جمله‌ای بنویسید ..." required>
+        <button type="submit" class="search-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="gray" viewBox="0 0 24 24">
+            <path d="M10 2a8 8 0 105.29 14.29l5.41 5.41 1.41-1.41-5.41-5.41A8 8 0 0010 2zm0 2a6 6 0 110 12A6 6 0 0110 4z"/>
+          </svg>
+        </button>
+      </form>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="index.html">Home</a></li>
+          <li class="current">Part of Speech</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
 
-    <!-- Page Title -->
-    <div class="page-title">
-      <div class="container d-lg-flex justify-content-between align-items-center">
-        <h1 class="mb-2 mb-lg-0">Part of Speech</h1>
-        <form class="search-container"onsubmit="submitText(event)">
-          <input type="text" id="search-bar" placeholder="Type here ..." required>
-          <button type="submit"><img class="search-icon" src="http://www.endlessicons.com/wp-content/uploads/2012/12/search-icon.png"></button>
-        </form>
-        <nav class="breadcrumbs">
-          <ol>
-            <li><a href="index.html">Home</a></li>
-            <li class="current">Part of Speech</li>
-          </ol>
-        </nav>
-      </div>
-    </div><!-- End Page Title -->
-
-    <!-- POS Tagging Section -->
-    <section id="portfolio-details" class="portfolio-details section">
-
-      <div class="container">
-
-        <div class="row gy-4">
-
-          <div class="col-lg-4">
-            <div>
-              <h3>Sentence declaration</h3>
-              <ul>
-                <li><strong>Nouns</strong>: Web design</li>
-                <li><strong>Adjectives</strong>: Beautiful</li>
-                <li><strong>Pronouns</strong>: you</li>
-                <li><strong>Verbs</strong>: is</li>
-              </ul>
-            </div>
-            <div class="portfolio-description">
-              <h2>Explanation</h2>
-              <p>
-                Autem ipsum nam porro corporis rerum. Quis eos dolorem eos itaque inventore commodi labore quia quia. Exercitationem repudiandae officiis neque suscipit non officia eaque itaque enim. Voluptatem officia accusantium nesciunt est omnis tempora consectetur dignissimos. Sequi nulla at esse enim cum deserunt eius.
-              </p>
-            </div>
+  <section id="portfolio-details" class="portfolio-details section">
+    <div class="container">
+      <div class="row gy-4">
+        <div class="col-lg-4 sentence-pos">
+          <div>
+            <h3>Sentence Declaration</h3>
+            <ul id="pos-list">
+              <li><em>در حال تجزیه جمله ...</em></li>
+            </ul>
           </div>
-
-          <div class="col-lg-8">
-            <div class="portfolio-details-slider swiper init-swiper">
-
-              <div class="swiper-wrapper align-items-center">
-
-                <div class="swiper-slide">
-                  <img src="{{ url_for('static', filename='assets/img/portfolio/app-1.jpg') }}" alt="">
-                </div>
-            
-              </div>
-              <div class="swiper-pagination"></div>
-
-              <div id="tree-container" style="min-height: 300px; border: 1px solid #ccc; padding: 20px;"></div>
-
-            </div>
+          <div class="portfolio-description mt-4">
+            <h2>Explanation</h2>
+            <p id="pos-explanation">نتیجه‌ی تجزیه جمله در این‌جا نمایش داده می‌شود.</p>
           </div>
-
         </div>
-
+        <div class="col-lg-8">
+          <div id="tree-container"></div>
+        </div>
       </div>
-
-    </section>
-    <!-- End POS Tagging Section -->
-
-  </main>
-
+    </div>
+  </section>
+</main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" />
 
 <script>
 function submitText(event) {
   event.preventDefault();
   const input = document.getElementById('search-bar').value;
+  document.getElementById('pos-list').innerHTML = "<li><em>Loading...</em></li>";
+  document.getElementById('pos-explanation').innerText = "Analyzing...";
 
-  fetch('/https://abc123.ngrok-free.app/pos-tag', {
+  fetch('/pos-tag', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({text: input})
+    body: JSON.stringify({ text: input })
   })
   .then(res => res.json())
-  .then(data => renderTree(data.tags))
-  .catch(err => console.error(err));
+  .then(data => {
+    renderTree(data.tags);
+    renderPOSDetails(data.tags);
+    renderExplanation(data.explanation);
+  })
+  .catch(err => {
+    console.error(err);
+    document.getElementById('pos-list').innerHTML = "<li>Error retrieving POS tags.</li>";
+    document.getElementById('pos-explanation').innerText = "An error occurred.";
+  });
+}
+
+function getFullPOS(shortTag) {
+  const map = {
+    NOUN: "Noun", VERB: "Verb", ADJ: "Adjective", ADV: "Adverb", PRON: "Pronoun",
+    PROPN: "Proper Noun", PUNCT: "Punctuation", ADP: "Preposition", DET: "Determiner",
+    CCONJ: "Conjunction", SCONJ: "Sub. Conjunction", NUM: "Number", PART: "Particle",
+    AUX: "Auxiliary", INTJ: "Interjection", X: "Other"
+  };
+  return map[shortTag] || shortTag;
 }
 
 function renderTree(words) {
-  const nodes = [];
-  const edges = [];
+  const nodes = [], edges = [];
+  const colorMap = { VERB: "#ffe0b2", NOUN: "#c8e6c9", ADJ: "#d1c4e9", PRON: "#b3e5fc" };
 
   words.forEach(w => {
-    nodes.push({ id: w.id, label: `${w.text}\n(${w.pos})` });
+    nodes.push({
+      id: w.id,
+      label: `${w.text}\n(${getFullPOS(w.pos)})`,
+      font: { size: 16 },
+      shape: "ellipse",
+      color: {
+        background: colorMap[w.pos] || "#f0f0f0",
+        border: "#888"
+      }
+    });
     if (w.head !== 0) {
-      edges.push({ from: w.head, to: w.id, label: w.deprel, arrows: 'to' });
+      edges.push({ from: w.head, to: w.id, label: w.deprel, arrows: 'to', font: { align: 'middle' } });
     }
   });
 
   const container = document.getElementById('tree-container');
   const data = { nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges) };
   const options = {
-    layout: { hierarchical: { direction: "UD", sortMethod: "directed" } },
-    edges: { smooth: true },
-    physics: false
-  };
-
+  layout: {
+    hierarchical: {
+      direction: "UD",
+      sortMethod: "directed",
+      levelSeparation: 120,     // Increase vertical spacing
+      nodeSpacing: 200,         // Increase horizontal spacing
+      treeSpacing: 300,         // Optional: more space between branches
+    }
+  },
+  edges: {
+    smooth: {
+      type: "cubicBezier",
+      forceDirection: "vertical",
+      roundness: 0.4
+    },
+    arrows: { to: { enabled: true, scaleFactor: 0.6 } },
+    color: "#aaa",
+    font: { size: 12 }
+  },
+  nodes: {
+    shape: "ellipse",
+    font: { size: 16, face: "Tahoma" },
+    borderWidth: 1
+  },
+  physics: false
+};
   new vis.Network(container, data, options);
 }
-</script>
 
+function renderPOSDetails(tags) {
+  const grouped = { Nouns: [], Verbs: [], Adjectives: [], Pronouns: [] };
+  tags.forEach(w => {
+    const p = w.pos.toLowerCase();
+    if (p.startsWith("n")) grouped.Nouns.push(w.text);
+    else if (p.startsWith("v")) grouped.Verbs.push(w.text);
+    else if (p.startsWith("j") || p.startsWith("a")) grouped.Adjectives.push(w.text);
+    else if (p.startsWith("p")) grouped.Pronouns.push(w.text);
+  });
+  document.getElementById("pos-list").innerHTML = Object.entries(grouped)
+    .map(([k, w]) => `<li><strong>${k}</strong>: ${w.join(', ') || 'None'}</li>`)
+    .join('');
+}
+
+function renderExplanation(text) {
+  document.getElementById("pos-explanation").innerText = text || "Explanation based on POS tags will appear here.";
+}
+</script>
 
 {% include 'include/footer.html' %}

@@ -2,17 +2,17 @@ from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from flask import send_from_directory
 
-from nlp.pos_tagger import pos_tag_text
-from nlp.summarizer import summarize
-from nlp.grammar_corrector import correct_grammar
-from nlp.translator import translate_fa_to_en
-from nlp.vocab_trainer import find_usages
+# from nlp.pos_tagger import pos_tag_text
+# from nlp.summarizer import summarize
+# from nlp.grammar_corrector import correct_grammar
+# from nlp.translator import translate_fa_to_en
+# from nlp.vocab_trainer import find_usages
 
 
 import requests
 
 # Replace this with your actual ngrok URL from Colab
-COLAB_API_BASE = "https://6432-34-86-69-3.ngrok-free.app"
+COLAB_API_BASE = "https://509e-35-243-180-103.ngrok-free.app"
 
 app = Flask(__name__)
 CORS(app)
