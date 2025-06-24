@@ -78,7 +78,9 @@
       <div class="translation-box">
         <label for="source-text"><strong>Enter your text:</strong></label>
         <textarea id="source-text" placeholder="Type your text here..."></textarea>
+        
         <button class="btn-translate" onclick="translateText()">Translate</button>
+
       </div>
       <!-- Right: Output -->
       <div class="translation-box">
@@ -100,12 +102,12 @@
     }
 
     try {
-      const response = await fetch("https://abc123.ngrok-free.app/translate", {
+      const response = await fetch("/translate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ text: input })
+        body: JSON.stringify({ text: input })  // ✅ No target_lang
       });
 
       if (!response.ok) {
@@ -113,7 +115,7 @@
       }
 
       const data = await response.json();
-      document.getElementById('translated-text').innerText = data.translation;
+      document.getElementById('translated-text').innerText = data.translation || "⚠️ Translation not available.";
     } catch (error) {
       console.error("Error:", error);
       document.getElementById('translated-text').innerText = "⚠️ Error during translation.";

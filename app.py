@@ -12,7 +12,7 @@ from flask import send_from_directory
 import requests
 
 # Replace this with your actual ngrok URL from Colab
-COLAB_API_BASE = "https://509e-35-243-180-103.ngrok-free.app"
+COLAB_API_BASE = "https://4e4a-34-136-75-132.ngrok-free.app"
 
 app = Flask(__name__)
 CORS(app)
@@ -75,7 +75,7 @@ def vocab_usage_route():
 @app.route('/translate', methods=['POST'])
 def translation_route():
     text = request.json.get('text', '')
-    response = requests.post(f"{COLAB_API_BASE}/translate", json={'text': text})
+    response = requests.post(f"{COLAB_API_BASE}/translate", json={'text': text}, verify=False)
     return jsonify(response.json())
 
 # @app.route('/grammar-correct', methods=['POST'])
@@ -87,7 +87,7 @@ def translation_route():
 @app.route('/summarize', methods=['POST'])
 def do_summarize():
     text = request.json.get('text', '')
-    response = requests.post(f"{COLAB_API_BASE}/summarize", json={'text': text})
+    response = requests.post(f"{COLAB_API_BASE}/summarize", json={'text': text},  verify=False)
     return jsonify(response.json())
 
 
