@@ -1,8 +1,10 @@
 #from transformers import pipeline
 
-# Placeholder: later use a Persian-specific model
-pos_pipeline = pipeline( model="HooshvareLab/bert-base-parsbert-uncased", aggregation_strategy="simple")
-
+pos_pipeline = pipeline(
+    task="token-classification",
+    model="HooshvareLab/bert-fa-base-uncased",
+    aggregation_strategy="simple"  
+)
 
 def find_usages(text):
     result = pos_pipeline(text)
