@@ -1,6 +1,6 @@
 # #from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
-# model_name = "m3hrdadfi/mt5-small-fa-wiki-grammar-correction"  # public grammar correction model
+# model_name = "m3hrdadfi/mt5-small-fa-wiki-grammar-correction"  
 # tokenizer = AutoTokenizer.from_pretrained(model_name)
 # model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 

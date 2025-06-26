@@ -92,35 +92,30 @@
   </div>
 </main>
 
+
 <script>
   async function translateText() {
-    const input = document.getElementById('source-text').value;
-
-    if (!input.trim()) {
-      alert("Please enter some text.");
-      return;
-    }
-
-    try {
-      const response = await fetch("/translate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ text: input })  // ✅ No target_lang
-      });
-
-      if (!response.ok) {
-        throw new Error("Translation failed.");
-      }
-
-      const data = await response.json();
-      document.getElementById('translated-text').innerText = data.translation || "⚠️ Translation not available.";
-    } catch (error) {
-      console.error("Error:", error);
-      document.getElementById('translated-text').innerText = "⚠️ Error during translation.";
-    }
+  const input = document.getElementById('source-text').value;
+  if (!input.trim()) {
+    alert("Please enter some text.");
+    return;
   }
+
+  try {
+    const response = await fetch("/translate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: input })
+    });
+
+    const data = await response.json();
+    document.getElementById('translated-text').innerText = data.translation || "⚠️ Translation not available.";
+  } catch (error) {
+    document.getElementById('translated-text').innerText = "⚠️ Error during translation.";
+  }
+}
 </script>
+
+
 
 {% include 'include/footer.html' %}
