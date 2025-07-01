@@ -1,6 +1,12 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, session, jsonify, render_template
 from flask_cors import CORS
 from flask import send_from_directory
+
+from pymongo import MongoClient
+from bson.objectid import ObjectId
+import os
+from db.init_db import initialize_if_needed
+import requests
 
 # from nlp.pos_tagger import pos_tag_text
 # from nlp.summarizer import summarize
@@ -8,11 +14,18 @@ from flask import send_from_directory
 # from nlp.translator import translate_fa_to_en
 # from nlp.vocab_trainer import find_usages
 
+app = Flask(__name__)
 
-import requests
+# Call this once before starting the server
+initialize_if_needed()
+
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://nlp-mongo:27017/")
+client = MongoClient(MONGO_URI)
+db = client['daribrain']
+
 
 # Replace this with your actual ngrok URL from Colab
-COLAB_API_BASE = "https://ca85-34-42-108-151.ngrok-free.app"
+COLAB_API_BASE = "https://e1cd-34-56-254-72.ngrok-free.app"
 
 app = Flask(__name__)
 CORS(app)
@@ -21,6 +34,14 @@ CORS(app)
 @app.route('/')
 def home():
     return render_template('index.html')
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
 
 @app.route('/portfolio-details')
 def portfolio_details():
@@ -59,6 +80,74 @@ def speech_to_text():
     return render_template('speech_to_text.html')
 
 
+# ===== Notebook Routes =====
+@app.route('/daribrain')
+def notebook():
+    return render_template('/daribrain/main.html')
+
+
+@app.route('/daribrain/vocab')
+def vocab_book():
+    # Example MongoDB or list-based retrieval
+    # user_id = session.get('user_id')
+    # vocab_items = db.vocab.find({"user_id": user_id})
+    # return render_template("vocab_book.html", vocab_items=vocab_items)
+    return render_template('/daribrain/vocab_book.html')
+
+
+@app.route('/daribrain/notes', methods=['GET', 'POST'])
+def add_note():
+    # user_id = session.get('user_id')
+    # if request.method == 'POST':
+    #     note = {
+    #         "user_id": user_id,
+    #         "title": request.form['title'],
+    #         "content": request.form['content']
+    #     }
+    #     db.notes.insert_one(note)
+    #     return redirect(url_for('add_note'))
+
+    # notes = db.notes.find({"user_id": user_id})
+    # return render_template('notes.html', notes=notes)
+    return render_template('/daribrain/notes.html')
+
+# @app.route('/daribrain/notes/delete/<id>', methods=['POST'])
+# def delete_note(id):
+#     db.notes.delete_one({"_id": ObjectId(id)})
+#     return redirect(url_for('add_note'))
+
+
+
+@app.route('/daribrain/grammar', methods=['GET'])
+def grammar_library():
+    # Static list for now
+    grammar_lessons = [
+        {"id": 1, "title": "Present Simple", "description": "Used for regular actions and facts."},
+        {"id": 2, "title": "Past Perfect", "description": "Actions completed before another past event."},
+        {"id": 3, "title": "Future Tense", "description": "Describes actions that will happen."}
+    ]
+    return render_template("/daribrain/grammar_book.html", grammar_lessons=grammar_lessons)
+
+# @app.route('/daribrain/grammar/save', methods=['POST'])
+# def save_grammar():
+#     user_id = session.get('user_id')
+#     grammar = {
+#         "user_id": user_id,
+#         "title": request.form['title'],
+#         "description": request.form['description']
+#     }
+#     db.grammar_notes.insert_one(grammar)
+#     return jsonify({"success": True})
+
+@app.route('/daribrain/my_grammar', methods=['GET'])
+def my_grammar():
+    # user_id = session.get('user_id')
+    # saved_rules = list(db.grammar_notes.find({"user_id": user_id}))
+    # return render_template("my_grammar.html", saved_rules=saved_rules)
+    return render_template("/daribrain/my_grammar.html")
+
+
+
 # ===== API Routes – Proxied to Colab =====
 @app.route('/pos-tag', methods=['POST'])
 def pos_tag():
@@ -92,6 +181,13 @@ def do_summarize():
     text = request.json.get('text', '')
     response = requests.post(f"{COLAB_API_BASE}/summarize", json={'text': text},  verify=False)
     return jsonify(response.json())
+
+
+@app.route('/daribrain/lemma_tree/<word>')
+def proxy_lemma_tree(word):
+    response = requests.get(f"{COLAB_API_BASE}/daribrain/lemma_tree/{word}")
+    return jsonify(response.json())
+
 
 
 if __name__ == '__main__':
