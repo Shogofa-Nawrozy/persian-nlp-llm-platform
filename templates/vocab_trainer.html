@@ -1,4 +1,5 @@
 {% include 'include/header.html' %}
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
 
 <style>
   .search-container {
@@ -39,7 +40,7 @@
       </form>
       <nav class="breadcrumbs">
         <ol>
-          <li><a href="index.html">Go to</a></li>
+          <li><a href="/">Go to</a></li>
           <li class="current">My DariBrain</li>
         </ol>
       </nav>
@@ -48,21 +49,33 @@
 
   <section id="starter-section" class="starter-section section">
     <div class="container">
-      <h5>Word: <strong id="word-label">example</strong></h5>
-      <p><strong>Example Sentence:</strong> <span id="example-sentence">This is an <b>example</b> of how to use the word in a sentence.</span></p>
-      <p><strong>Phonetic:</strong> <span id="phonetic-text">/ɪɡˈzɑːmpəl/</span></p>
-      <button onclick="document.getElementById('audio-example').play()">🔊 Hear Pronunciation</button>
-      <audio id="audio-example" src="{{ url_for('static', filename='audio/example.mp3') }}"></audio>
-      <button type="submit" class="btn btn-success">Add to My DariBrain</button>
-    </div>
+      <div class="row">
+        <!-- Left: Vocab Info -->
+        <div class="col-md-6">
+          <h5>Word: <strong id="word-label">example</strong></h5>
+          <p><strong>Example Sentence:</strong> <span id="example-sentence">This is an <b>example</b> of how to use the word in a sentence.</span></p>
+          <p><strong>Phonetic:</strong> <span id="phonetic-text">/ɪɡˈzɑːmpəl/</span></p>
+          <!-- Audio functionality disabled -->
+          <!--
+          <button onclick="document.getElementById('audio-example').play()">🔊 Hear Pronunciation</button>
+          <audio id="audio-example" style="display: none;"></audio>
+          -->
+          <button type="submit" class="btn btn-success">Add to My DariBrain</button>
 
-    <div class="container" style="margin-top: 40px;">
-      <h4>Usage in Different Sentences</h4>
-      <ul id="usage-list">
-        <li><strong>Noun:</strong> This is an <b>example</b> of how to use the word in a sentence.</li>
-        <li><strong>Adjective:</strong> She gave an <b>exemplary</b> performance. (related form)</li>
-        <li><strong>Verb:</strong> The teacher <b>exemplified</b> the concept with a diagram. (related form)</li>
-      </ul>
+          <div style="margin-top: 40px;">
+            <h4>Usage in Different Sentences</h4>
+            <ul id="usage-list"></ul>
+          </div>
+        </div>
+
+        <!-- Right: Lemma Tree -->
+        <div class="col-md-6">
+          <h5>🌳 Lemma Tree</h5>
+          <div id="mermaid" class="border bg-light p-3 rounded">
+            <div id="mermaid-content"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -83,6 +96,7 @@
 
         const data = await res.json();
         updateVocabUI(word, data);
+        await fetchLemmaTree(word);
       } catch (err) {
         console.error(err);
         alert("Error fetching word data.");
@@ -90,22 +104,35 @@
     }
 
     function updateVocabUI(word, data) {
-  document.getElementById("word-label").innerText = `${word} / ${data.persian}`;
-  document.getElementById("example-sentence").innerText = data.example_en;
-  document.getElementById("phonetic-text").innerText = data.phonetic || "—";
+      document.getElementById("word-label").innerText = `${word} / ${data.persian}`;
+      document.getElementById("example-sentence").innerText = data.example_en;
+      document.getElementById("phonetic-text").innerText = data.phonetic || "—";
 
-  const audio = document.getElementById("audio-example");
-  if (data.audio) audio.src = data.audio;
+      const usageList = document.getElementById("usage-list");
+      usageList.innerHTML = "";
+      (data.usages || []).forEach(item => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${item.pos}:</strong> ${item.sentence_en}<br><em>${item.sentence_fa}</em>`;
+        usageList.appendChild(li);
+      });
+    }
 
-  const usageList = document.getElementById("usage-list");
-  usageList.innerHTML = "";
-  (data.usages || []).forEach(item => {
-    const li = document.createElement("li");
-    li.innerHTML = `<strong>${item.pos}:</strong> ${item.sentence_en}<br><em>${item.sentence_fa}</em>`;
-    usageList.appendChild(li);
-  });
-}
+    const COLAB_API_BASE = "{{ config['COLAB_API_BASE'] }}";
 
+    async function fetchLemmaTree(word) {
+      try {
+        const res = await fetch(`${COLAB_API_BASE}/daribrain/lemma_tree/${word}`);
+        const data = await res.json();
+
+        const tree = `graph TD\n  root["${data.lemma}"]\n` +
+          data.forms.map((f, i) => `  root --> f${i}["${f}"]`).join('\n');
+
+        document.getElementById("mermaid-content").innerHTML = `<div class="mermaid">${tree}</div>`;
+        mermaid.contentLoaded();
+      } catch (err) {
+        console.warn("Lemma tree unavailable");
+      }
+    }
   </script>
 </main>
 

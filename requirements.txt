@@ -5,3 +5,4 @@ flask-cors
 sentencepiece
 torch==2.2.2
 transformers==4.40.1
+pymongo

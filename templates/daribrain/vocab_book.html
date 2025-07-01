@@ -1,0 +1,30 @@
+<h2 class="mb-4 text-center">📖 My Vocabulary Book</h2>
+
+<div class="table-responsive">
+  <table class="table table-bordered align-middle">
+    <thead>
+      <tr>
+        <th>Word</th>
+        <th>Meaning</th>
+        <th>Synonyms</th>
+        <th>Example</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in vocab_items %}
+      <tr>
+        <td>{{ item.word }}</td>
+        <td>{{ item.meaning }}</td>
+        <td>{{ item.synonyms }}</td>
+        <td>{{ item.example }}</td>
+        <td>
+          <form action="{{ url_for('delete_vocab', id=item.id) }}" method="POST">
+            <button class="btn btn-sm btn-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

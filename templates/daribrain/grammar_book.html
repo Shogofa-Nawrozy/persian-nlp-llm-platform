@@ -1,0 +1,44 @@
+<h2 class="text-center mb-4">📚 Grammar Library</h2>
+
+<input type="text" id="grammar-search" class="form-control mb-4" placeholder="Search grammar topic...">
+
+<div id="grammar-list">
+  {% for lesson in grammar_lessons %}
+  <div class="card mb-3 grammar-item">
+    <div class="card-body">
+      <h5 class="card-title">{{ lesson.title }}</h5>
+      <p class="card-text">{{ lesson.description }}</p>
+      <form class="grammar-save-form" data-title="{{ lesson.title }}" data-description="{{ lesson.description }}">
+        <button type="submit" class="btn primary-btn">+ Add to My Grammar Book</button>
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<script>
+// Simple search filter
+document.getElementById('grammar-search').addEventListener('input', function () {
+  const query = this.value.toLowerCase();
+  document.querySelectorAll('.grammar-item').forEach(item => {
+    item.style.display = item.textContent.toLowerCase().includes(query) ? '' : 'none';
+  });
+});
+
+// Handle grammar save form via JS
+document.querySelectorAll('.grammar-save-form').forEach(form => {
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    fetch('/daribrain/grammar/save', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({
+        title: form.dataset.title,
+        description: form.dataset.description
+      })
+    }).then(() => {
+      form.innerHTML = '<span class="text-success">✅ Saved!</span>';
+    });
+  });
+});
+</script>

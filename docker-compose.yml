@@ -1,11 +1,51 @@
-version: '3.8'
-
 services:
-  nlp-app:
-    build: .
-    container_name: persian-nlp-container
+  nlp-mongo:
+    image: mongo
+    container_name: nlp-mongo
+    restart: always
     ports:
-      - "5001:5001"  # HOST:CONTAINER – opens your app at http://localhost:5001
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - nlp_network
+
+  mongo-express:
+    image: mongo-express
+    container_name: nlp-mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=nlp-mongo
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin
+    depends_on:
+      - nlp-mongo
+    networks:
+      - nlp_network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nlp-flask-app
+    restart: always
+    ports:
+      - "5001:5001"
     volumes:
       - .:/app
-    restart: unless-stopped
+    depends_on:
+      - nlp-mongo
+    environment:
+      - MONGO_URI=mongodb://nlp-mongo:27017/
+    networks:
+      - nlp_network
+
+volumes:
+  mongo-data:
+
+networks:
+  nlp_network:
+    driver: bridge

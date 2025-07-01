@@ -1,0 +1,27 @@
+<h2 class="mb-4 text-center">🧠 My Notes</h2>
+
+<!-- Create new note -->
+<form method="POST" action="{{ url_for('add_note') }}">
+  <div class="mb-3">
+    <label for="title" class="form-label">Note Title</label>
+    <input type="text" class="form-control" id="title" name="title" required>
+  </div>
+  <div class="mb-3">
+    <label for="content" class="form-label">Note Content</label>
+    <textarea class="form-control" id="content" name="content" required></textarea>
+  </div>
+  <button type="submit" class="btn primary-btn">Save Note</button>
+</form>
+
+<hr class="my-4">
+
+<h4 class="mb-3">Your Notes</h4>
+{% for note in notes %}
+<div class="note-card">
+  <h5>{{ note.title }}</h5>
+  <p>{{ note.content }}</p>
+  <form action="{{ url_for('delete_note', id=note.id) }}" method="POST">
+    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+  </form>
+</div>
+{% endfor %}

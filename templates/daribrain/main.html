@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>TalkP</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+<!-- Favicons -->
+<link href="{{ url_for('static', filename='assets/img/fav.png') }}" rel="icon">
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+
+<!-- Vendor CSS Files -->
+<link href="{{ url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='assets/vendor/aos/aos.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #10bc69;
+      --primary-dark: #0e9e59;
+      --sidebar-bg: #e9f7f0;
+    }
+
+    body {
+      background: #f8f9fa;
+      color: #333;
+    }
+
+    .sidebar {
+      background-color: var(--sidebar-bg);
+      padding: 20px;
+      height: 100vh;
+      position: fixed;
+      width: 240px;
+      overflow-y: auto;
+      border-right: 1px solid #ddd;
+    }
+
+    .sidebar h4 {
+      margin-top:10px;
+      margin-bottom: 50px;
+      font-weight: bold;
+      color: var(--primary-dark);
+    }
+
+    .sidebar a {
+      display: block;
+      margin: 12px 0;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .sidebar a:hover {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .main-content {
+      margin-left: 260px;
+      padding: 30px;
+      min-height: 100vh;
+      background-color: white;
+    }
+
+    .primary-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+    }
+
+    .primary-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .card {
+      border-radius: 14px;
+      border: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .header {
+      border-bottom: 2px solid #eee;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+<!-- Inside main.html -->
+<div class="sidebar">
+  <h4>🧠 My DariBrain</h4>
+  <a href="#" data-load="/daribrain/vocab">📖 Vocab Book</a>
+  <a href="#" data-load="/daribrain/notes">📝 Notes</a>
+  <a href="#" data-load="/daribrain/grammar">📚 Grammar Library</a>
+  <a href="#" data-load="/daribrain/my_grammar">📘 My Grammar Book</a>
+
+  <hr>
+  <!-- Optional extra links -->
+</div>
+
+<div class="main-content" id="main-content">
+  <div class="header">
+    <h2 class="text-success">Welcome to My DariBrain</h2>
+    <p>Select a notebook or topic from the sidebar to begin exploring.</p>
+  </div>
+  
+  <div id="dynamic-area">
+    <div class="d-flex justify-content-end mb-3">
+  <a href="{{ url_for('home') }}" class="btn primary-btn">← Back to Homepage</a>
+</div>
+
+    <div class="alert alert-success">This is your main dashboard. Pick something from the sidebar!</div>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.sidebar a[data-load]').forEach(link => {
+  link.addEventListener('click', function (e) {
+    e.preventDefault();
+    const url = this.getAttribute('data-load');
+    fetch(url)
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('dynamic-area').innerHTML = html;
+      })
+      .catch(err => {
+        document.getElementById('dynamic-area').innerHTML = '<div class="alert alert-danger">Failed to load content.</div>';
+        console.error('Load error:', err);
+      });
+  });
+});
+</script>
+
+</body>
+</html>
