@@ -54,7 +54,7 @@
         <div class="col-md-6">
           <h5>Word: <strong id="word-label">example</strong></h5>
           <p><strong>Example Sentence:</strong> <span id="example-sentence">This is an <b>example</b> of how to use the word in a sentence.</span></p>
-          <p><strong>Phonetic:</strong> <span id="phonetic-text">/ɪɡˈzɑːmpəl/</span></p>
+          <p><strong>Transliteration:</strong> <span id="translit-text">—</span></p>
           <!-- Audio functionality disabled -->
           <!--
           <button onclick="document.getElementById('audio-example').play()">🔊 Hear Pronunciation</button>
@@ -81,32 +81,41 @@
 
   <script>
     async function submitSearch(event) {
-      event.preventDefault();
-      const word = document.getElementById("search-bar").value.trim();
-      if (!word) return alert("Please enter a word.");
+  event.preventDefault();
+  const word = document.getElementById("search-bar").value.trim();
+  if (!word) return alert("Please enter a word.");
 
-      try {
-        const res = await fetch('/vocab-usage', {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: word })
-        });
+  try {
+    const usageRes = await fetch('/vocab-usage', {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: word })
+    });
 
-        if (!res.ok) throw new Error("Failed to fetch");
+    const usageData = await usageRes.json();
+    updateVocabUI(word, usageData);
 
-        const data = await res.json();
-        updateVocabUI(word, data);
-        await fetchLemmaTree(word);
-      } catch (err) {
-        console.error(err);
-        alert("Error fetching word data.");
-      }
-    }
+    const translitRes = await fetch(`${COLAB_API_BASE}/transliterate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: word })
+    });
+
+    const { transliteration } = await translitRes.json();
+    document.getElementById("translit-text").innerText = transliteration;
+
+    await fetchLemmaTree(word);
+
+  } catch (err) {
+    console.error(err);
+    alert("Error fetching word data.");
+  }
+}
 
     function updateVocabUI(word, data) {
       document.getElementById("word-label").innerText = `${word} / ${data.persian}`;
       document.getElementById("example-sentence").innerText = data.example_en;
-      document.getElementById("phonetic-text").innerText = data.phonetic || "—";
+      document.getElementById("translit-text").innerText = data.transliteration || "—";
 
       const usageList = document.getElementById("usage-list");
       usageList.innerHTML = "";

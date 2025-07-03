@@ -25,7 +25,7 @@ db = client['daribrain']
 
 
 # Replace this with your actual ngrok URL from Colab
-COLAB_API_BASE = "https://e1cd-34-56-254-72.ngrok-free.app"
+COLAB_API_BASE = "https://3fd4-34-73-145-193.ngrok-free.app"
 
 app = Flask(__name__)
 CORS(app)
