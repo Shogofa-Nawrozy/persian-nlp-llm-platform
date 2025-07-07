@@ -25,7 +25,7 @@ db = client['daribrain']
 
 
 # Replace this with your actual ngrok URL from Colab
-COLAB_API_BASE = "https://3fd4-34-73-145-193.ngrok-free.app"
+COLAB_API_BASE = "https://8579-35-194-81-52.ngrok-free.app"
 
 app = Flask(__name__)
 CORS(app)
@@ -155,26 +155,63 @@ def pos_tag():
     response = requests.post(f"{COLAB_API_BASE}/pos-tag", json={'text': text})
     return jsonify(response.json())
 
+
+@app.route('/transliterate', methods=['POST'])
+def transliterate_proxy():
+    text = request.json.get('text', '')
+    response = requests.post(f"{COLAB_API_BASE}/transliterate", json={'text': text})
+    return jsonify(response.json())
+
+
 @app.route('/vocab-usage', methods=['POST'])
 def vocab_usage_route():
     text = request.json.get('text', '')
     response = requests.post(f"{COLAB_API_BASE}/vocab-usage", json={'text': text})
     return jsonify(response.json())
 
-@app.route('/translate', methods=['POST'])
-def translate():
-    text = request.json.get('text', '')
-    try:
-        response = requests.post(f"{COLAB_API_BASE}/translate", json={'text': text}, verify=False)
-        return jsonify(response.json())
-    except Exception as e:
-        return jsonify({'translation': None, 'error': str(e)}), 500
 
-# @app.route('/grammar-correct', methods=['POST'])
-# def grammar_route():
-#     text = request.json.get('text', '')
-#     response = requests.post(f"{COLAB_API_BASE}/grammar-correct", json={'text': text})
-#     return jsonify(response.json())
+
+
+@app.route('/translate', methods=['POST'])
+def translation_route():
+    data = request.get_json()
+    text = data.get('text', '')
+    direction = data.get('direction', 'fa-en')
+
+    # Forward the request to Colab model
+    response = requests.post(f"{COLAB_API_BASE}/translate", json={
+        'text': text,
+        'direction': direction
+    }, verify=False)
+
+    return jsonify(response.json())
+
+
+
+
+@app.route('/grammar-correct', methods=['POST'])
+def grammar_correct():
+    text = request.json.get('text', '').strip()
+
+    if not text:
+        return jsonify({'corrected': None, 'error': '⚠️ No text provided.'}), 400
+
+    try:
+        response = requests.get(
+            'https://openl.io/grammar-check',
+            params={'text': text},
+            timeout=10
+        )
+        data = response.json()
+
+        if 'correction' in data:
+            return jsonify({'corrected': data['correction']})
+        else:
+            return jsonify({'corrected': None, 'error': data.get('error', 'No correction returned')}), 500
+    except Exception as e:
+        return jsonify({'corrected': None, 'error': f'OpenL Grammar failed: {str(e)}'}), 500
+
+
 
 @app.route('/summarize', methods=['POST'])
 def do_summarize():

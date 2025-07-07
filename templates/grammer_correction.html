@@ -34,15 +34,34 @@
       </div>
     </section>
 
-    <script>
-      fetch('/https://abc123.ngrok-free.app/grammar-correct', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ text: input })
-      })
-
-    </script>
-
   </main>
+
+
+  <script>
+  async function checkGrammar() {
+    const input = document.getElementById('grammar-input').value;
+    const resultBox = document.getElementById('grammar-result');
+
+    if (!input.trim()) {
+      resultBox.innerText = "⚠️ Please enter some text.";
+      return;
+    }
+
+    resultBox.innerText = "⏳ Checking...";
+
+    try {
+      const response = await fetch("/grammar-correct", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: input })
+      });
+
+      const data = await response.json();
+      resultBox.innerText = data.corrected || "⚠️ No corrections returned.";
+    } catch (error) {
+      resultBox.innerText = "❌ Error checking grammar.";
+    }
+  }
+</script>
 
 {% include 'include/footer.html' %}

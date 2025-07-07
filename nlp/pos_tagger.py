@@ -1,4 +1,4 @@
-#import stanza
+import stanza
 
 # Load Persian pipeline only once
 nlp = stanza.Pipeline(lang='fa', processors='tokenize,mwt,pos,lemma,depparse', use_gpu=False)

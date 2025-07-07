@@ -55,11 +55,6 @@
           <h5>Word: <strong id="word-label">example</strong></h5>
           <p><strong>Example Sentence:</strong> <span id="example-sentence">This is an <b>example</b> of how to use the word in a sentence.</span></p>
           <p><strong>Transliteration:</strong> <span id="translit-text">—</span></p>
-          <!-- Audio functionality disabled -->
-          <!--
-          <button onclick="document.getElementById('audio-example').play()">🔊 Hear Pronunciation</button>
-          <audio id="audio-example" style="display: none;"></audio>
-          -->
           <button type="submit" class="btn btn-success">Add to My DariBrain</button>
 
           <div style="margin-top: 40px;">
@@ -80,40 +75,58 @@
   </section>
 
   <script>
+    const COLAB_API_BASE = "{{ config['COLAB_API_BASE'] }}";
+
     async function submitSearch(event) {
-  event.preventDefault();
-  const word = document.getElementById("search-bar").value.trim();
-  if (!word) return alert("Please enter a word.");
+      event.preventDefault();
+      const word = document.getElementById("search-bar").value.trim();
+      if (!word) return alert("Please enter a word.");
 
-  try {
-    const usageRes = await fetch('/vocab-usage', {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: word })
-    });
+      try {
+        // Get usage data from local Flask
+        const usageRes = await fetch('/vocab-usage', {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: word })
+        });
+        const usageData = await usageRes.json();
 
-    const usageData = await usageRes.json();
-    updateVocabUI(word, usageData);
+        const translateRes = await fetch('/translate', {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: word, direction: "fa-en" })
+        });
 
-    const translitRes = await fetch(`${COLAB_API_BASE}/transliterate`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: word })
-    });
+        const translateData = await translateRes.json();
+        let translation = translateData.translation || "—";
+        translation = translation.replace(/^.*?\b[a-z]{2}\b\s*>{1,2}\s*\b[a-z]{2}\b/i, '').trim();
 
-    const { transliteration } = await translitRes.json();
-    document.getElementById("translit-text").innerText = transliteration;
 
-    await fetchLemmaTree(word);
 
-  } catch (err) {
-    console.error(err);
-    alert("Error fetching word data.");
-  }
-}
 
-    function updateVocabUI(word, data) {
-      document.getElementById("word-label").innerText = `${word} / ${data.persian}`;
+        // Update UI
+        updateVocabUI(word, usageData, translation);
+
+        // Get transliteration
+        const translitRes = await fetch(`${COLAB_API_BASE}/transliterate`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: word })
+        });
+        const { transliteration } = await translitRes.json();
+        document.getElementById("translit-text").innerText = transliteration;
+
+        // Draw tree
+        await fetchLemmaTree(word);
+
+      } catch (err) {
+        console.error(err);
+        alert("Error fetching word data.");
+      }
+    }
+
+    function updateVocabUI(word, data, translation) {
+      document.getElementById("word-label").innerText = `${word} / ${translation}`;
       document.getElementById("example-sentence").innerText = data.example_en;
       document.getElementById("translit-text").innerText = data.transliteration || "—";
 
@@ -126,11 +139,9 @@
       });
     }
 
-    const COLAB_API_BASE = "{{ config['COLAB_API_BASE'] }}";
-
     async function fetchLemmaTree(word) {
       try {
-        const res = await fetch(`${COLAB_API_BASE}/daribrain/lemma_tree/${word}`);
+        const res = await fetch(`/daribrain/lemma_tree/${word}`);
         const data = await res.json();
 
         const tree = `graph TD\n  root["${data.lemma}"]\n` +
@@ -139,7 +150,7 @@
         document.getElementById("mermaid-content").innerHTML = `<div class="mermaid">${tree}</div>`;
         mermaid.contentLoaded();
       } catch (err) {
-        console.warn("Lemma tree unavailable");
+        console.warn("Lemma tree unavailable:", err);
       }
     }
   </script>

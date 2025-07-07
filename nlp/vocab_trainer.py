@@ -1,4 +1,4 @@
-#from transformers import pipeline
+from transformers import pipeline
 
 pos_pipeline = pipeline(
     task="token-classification",
