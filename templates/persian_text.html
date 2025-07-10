@@ -1,0 +1,149 @@
+{% include 'include/header.html' %}
+
+<style>
+  .reading-section {
+    padding: 40px 20px;
+    background: #f9f9f9;
+    border-radius: 12px;
+  }
+
+  .reading-section h2 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .reading-section p {
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 30px;
+  }
+
+  .reading-table, .vocab-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto 40px;
+    max-width: 900px;
+  }
+
+  .reading-table th, .reading-table td,
+  .vocab-table th, .vocab-table td {
+    border: 1px solid #ddd;
+    padding: 14px 16px;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  .reading-table th, .vocab-table th {
+    background-color: #f1f3f4;
+    font-weight: bold;
+  }
+
+  .vocab-section {
+    padding: 20px 0;
+    background-color: #ffffff;
+  }
+
+  .vocab-section h3 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+</style>
+
+<main class="main">
+  <div class="container">
+    <div class="reading-section">
+      <h2>Beginner Reading: معرفی خود</h2>
+      <p>Beginner Topic: Introducing Yourself</p>
+
+      <table class="reading-table">
+        <thead>
+          <tr>
+            <th>English</th>
+            <th>Transliteration</th>
+            <th>Persian</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><em>Hello, I am Ali.</em></td>
+            <td>Salām, man Ali hastam.</td>
+            <td>سلام، من علی هستم.</td>
+          </tr>
+          <tr>
+            <td><em>I am 22 years old.</em></td>
+            <td>Man bist-o-do sāl dāram.</td>
+            <td>من بیست و دو سال دارم.</td>
+          </tr>
+          <tr>
+            <td><em>I live in Kabul.</em></td>
+            <td>Man dar Kābol zendegi mikonam.</td>
+            <td>من در کابل زندگی می‌کنم.</td>
+          </tr>
+          <tr>
+            <td><em>I am a computer science student.</em></td>
+            <td>Man dāneshjou-ye reshte-ye computer hastam.</td>
+            <td>من دانشجوی رشته‌ی کامپیوتر هستم.</td>
+          </tr>
+          <tr>
+            <td><em>I speak Persian and English.</em></td>
+            <td>Man be zabān-hāye Fārsi va Englisi sohbat mikonam.</td>
+            <td>من به زبان‌های فارسی و انگلیسی صحبت می‌کنم.</td>
+          </tr>
+          <tr>
+            <td><em>I like programming and web design.</em></td>
+            <td>Man barnāme-nevisi va tarāhi-ye web doost dāram.</td>
+            <td>من برنامه‌نویسی و طراحی وب دوست دارم.</td>
+          </tr>
+          <tr>
+            <td><em>I have one sister and one brother.</em></td>
+            <td>Man yek khāhar va yek barādar dāram.</td>
+            <td>من یک خواهر و یک برادر دارم.</td>
+          </tr>
+          <tr>
+            <td><em>My hobbies are reading and music.</em></td>
+            <td>Alāghe-hā-ye man ketāb khāndan va mousighi hastand.</td>
+            <td>علاقه‌های من کتاب خواندن و موسیقی هستند.</td>
+          </tr>
+          <tr>
+            <td><em>I want to become a developer.</em></td>
+            <td>Man mikhāham yek tosee-dehande beshavam.</td>
+            <td>من می‌خواهم یک توسعه‌دهنده بشوم.</td>
+          </tr>
+          <tr>
+            <td><em>Nice to meet you!</em></td>
+            <td>Khosh āshnā shodam!</td>
+            <td>خوش آشنا شدم!</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="vocab-section">
+      <h3>📘 Vocabulary</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr>
+            <th>Persian</th>
+            <th>Transliteration</th>
+            <th>English</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>دانشجو</td><td>dāneshjou</td><td>student</td></tr>
+          <tr><td>زندگی</td><td>zendegi</td><td>life</td></tr>
+          <tr><td>کامپیوتر</td><td>computer</td><td>computer</td></tr>
+          <tr><td>برنامه‌نویسی</td><td>barnāme-nevisi</td><td>programming</td></tr>
+          <tr><td>کتاب</td><td>ketāb</td><td>book</td></tr>
+          <tr><td>توسعه‌دهنده</td><td>towsee-dehande</td><td>developer</td></tr>
+          <tr><td>نرم‌افزار</td><td>narm-afzār</td><td>software</td></tr>
+          <tr><td>خانواده</td><td>khānevāde</td><td>family</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+{% include 'include/footer.html' %}

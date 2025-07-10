@@ -25,7 +25,7 @@ db = client['daribrain']
 
 
 # Replace this with your actual ngrok URL from Colab
-COLAB_API_BASE = "https://8579-35-194-81-52.ngrok-free.app"
+COLAB_API_BASE = "https://42666ef3d68c.ngrok-free.app"
 
 app = Flask(__name__)
 CORS(app)
@@ -34,6 +34,12 @@ CORS(app)
 @app.route('/')
 def home():
     return render_template('index.html')
+
+
+@app.route('/persian_text')
+def persian_text():
+    return render_template('persian_text.html')
+
 
 @app.route('/login')
 def login():
@@ -74,11 +80,6 @@ def summarization():
 @app.route('/text_to_speech')
 def text_to_speech():
     return render_template('text_to_speech.html')
-
-@app.route('/speech_to_text')
-def speech_to_text():
-    return render_template('speech_to_text.html')
-
 
 # ===== Notebook Routes =====
 @app.route('/daribrain')

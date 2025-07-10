@@ -45,7 +45,8 @@
               <li><a href="#services">Services</a></li>
               <li><a href="#portfolio">Portfolio</a></li>
               <li><a href="#team">Team</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <li><a href="#contact">Contact</a></li>
+             <!--  <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
                 <ul>
                   <li><a href="#">Deep Dropdown 1</a></li>
                   <li><a href="#">Deep Dropdown 2</a></li>
@@ -53,9 +54,10 @@
                   <li><a href="#">Deep Dropdown 4</a></li>
                   <li><a href="#">Deep Dropdown 5</a></li>
                 </ul>
-              </li>
+              </li> --> 
             </ul>
           </li>
+          <li><a href="{{ url_for('persian_text') }}">Persian text to start</a></li>
           <li><a href="{{ url_for('pos_tagging') }}">Part of Speech</a></li>
           <li><a href="{{ url_for('vocab_trainer') }}">Vocab Trainer</a></li>
           <li class="dropdown"><a href="#"><span>More</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
@@ -64,10 +66,8 @@
               <li><a href="{{ url_for('grammer_correction') }}">Grammer Correction</a></li>
               <li><a href="{{ url_for('summarization') }}">Summarization</a></li>
               <li><a href="{{ url_for('text_to_speech') }}">Text to Speech</a></li>
-              <li><a href="{{ url_for('speech_to_text') }}">Speech to Text</a></li>
             </ul>
           </li>
-          <li><a href="#contact">Contact</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>

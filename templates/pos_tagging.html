@@ -46,6 +46,39 @@
     border-radius: 0;
     background: #ffffff;
   }
+
+  .word-block {
+    padding: 10px 14px;
+    border-radius: 12px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1.6;
+    transition: transform 0.2s;
+  }
+
+  .word-block:hover {
+    transform: scale(1.05);
+  }
+
+  .pos-label {
+    font-size: 12px;
+    color: #333;
+  }
+
+  .tooltip-box {
+    position: absolute;
+    bottom: 110%;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    white-space: nowrap;
+    font-size: 14px;
+    z-index: 10;
+  }
 </style>
 
 <main class="main">
@@ -83,6 +116,10 @@
             <h2>Explanation</h2>
             <p id="pos-explanation">نتیجه‌ی تجزیه جمله در این‌جا نمایش داده می‌شود.</p>
           </div>
+          <div class="portfolio-description mt-4">
+            <h2>Linear POS Visualization</h2>
+            <div id="linear-pos-visual" style="display: flex; flex-wrap: wrap; justify-content: flex-end; direction: rtl; gap: 12px;"></div>
+          </div>
         </div>
         <div class="col-lg-8">
           <div id="tree-container"></div>
@@ -112,6 +149,7 @@ function submitText(event) {
     renderTree(data.tags);
     renderPOSDetails(data.tags);
     renderExplanation(data.explanation);
+    renderLinearPOSVisual(data.tags); // ✅ New
   })
   .catch(err => {
     console.error(err);
@@ -153,32 +191,32 @@ function renderTree(words) {
   const container = document.getElementById('tree-container');
   const data = { nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges) };
   const options = {
-  layout: {
-    hierarchical: {
-      direction: "UD",
-      sortMethod: "directed",
-      levelSeparation: 120,     // Increase vertical spacing
-      nodeSpacing: 200,         // Increase horizontal spacing
-      treeSpacing: 300,         // Optional: more space between branches
-    }
-  },
-  edges: {
-    smooth: {
-      type: "cubicBezier",
-      forceDirection: "vertical",
-      roundness: 0.4
+    layout: {
+      hierarchical: {
+        direction: "UD",
+        sortMethod: "directed",
+        levelSeparation: 120,
+        nodeSpacing: 200,
+        treeSpacing: 300
+      }
     },
-    arrows: { to: { enabled: true, scaleFactor: 0.6 } },
-    color: "#aaa",
-    font: { size: 12 }
-  },
-  nodes: {
-    shape: "ellipse",
-    font: { size: 16, face: "Tahoma" },
-    borderWidth: 1
-  },
-  physics: false
-};
+    edges: {
+      smooth: {
+        type: "cubicBezier",
+        forceDirection: "vertical",
+        roundness: 0.4
+      },
+      arrows: { to: { enabled: true, scaleFactor: 0.6 } },
+      color: "#aaa",
+      font: { size: 12 }
+    },
+    nodes: {
+      shape: "ellipse",
+      font: { size: 16, face: "Tahoma" },
+      borderWidth: 1
+    },
+    physics: false
+  };
   new vis.Network(container, data, options);
 }
 
@@ -198,6 +236,45 @@ function renderPOSDetails(tags) {
 
 function renderExplanation(text) {
   document.getElementById("pos-explanation").innerText = text || "Explanation based on POS tags will appear here.";
+}
+
+function renderLinearPOSVisual(tags) {
+  const container = document.getElementById("linear-pos-visual");
+  container.innerHTML = '';
+
+  const colorMap = {
+    NOUN: "#a5d6a7", VERB: "#ffe082", ADJ: "#ce93d8", PRON: "#81d4fa",
+    ADV: "#ffccbc", ADP: "#f0f4c3", AUX: "#d7ccc8", PUNCT: "#eeeeee"
+  };
+
+  tags.forEach(w => {
+    const wordBox = document.createElement("div");
+    wordBox.className = "word-block";
+    wordBox.style.backgroundColor = colorMap[w.pos] || "#f0f0f0";
+
+    wordBox.innerHTML = `
+      <div>${w.text}</div>
+      <div class="pos-label">(${getFullPOS(w.pos)})</div>
+    `;
+
+    wordBox.addEventListener("mouseenter", () => {
+      const tooltip = document.createElement("div");
+      tooltip.className = "tooltip-box";
+      tooltip.innerHTML = `
+        <strong>${w.text}</strong><br>
+        📌 ${getFullPOS(w.pos)}<br>
+        👤 ${w.deprel || '—'}
+      `;
+      wordBox.appendChild(tooltip);
+    });
+
+    wordBox.addEventListener("mouseleave", () => {
+      const tip = wordBox.querySelector(".tooltip-box");
+      if (tip) tip.remove();
+    });
+
+    container.appendChild(wordBox);
+  });
 }
 </script>
 
