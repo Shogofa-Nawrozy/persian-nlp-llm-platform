@@ -51,7 +51,7 @@
 
 ## Tech Stack
 
-- **Frontend**: HTML, Bootstrap, JS
+- **Frontend**: HTML, Css, Bootstrap, JS
 - **Backend**: Python, Flask
 - **NLP Models**: ParsBERT, mT5, small100, Stanza, custom LLM APIs
 - **Deployment**: Docker, Google Colab (model hosting)
