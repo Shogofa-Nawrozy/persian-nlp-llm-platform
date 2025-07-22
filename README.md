@@ -1,13 +1,13 @@
 # TalkP – Persian Language Learning Platform (In Progress)
 
-**TalkP** is a modular web-based educational platform designed to support learning the Persian language (both **Farsi** and **Dari** variants) using modern **Natural Language Processing (NLP)** and **Large Language Models (LLMs)**.
+**TalkP** is a modular web-based educational platform designed to support learning the Persian language using modern **Natural Language Processing (NLP)** and **Large Language Models (LLMs)**.
 
-> 🚧 **Project Status:** In Progress  
+> **Project Status:** In Progress  
 > This project is currently under active development. Key features have been implemented and tested, and new modules are being continuously integrated.
 
 ---
 
-## 🎯 Project Goals
+## Project Goals
 
 - Enable interactive learning of Persian for English-speaking users.
 - Combine traditional language learning with AI-powered features.
@@ -15,7 +15,7 @@
 
 ---
 
-## ✅ Implemented Features
+## Implemented Features
 
 - **Part-of-Speech (POS) Tagging**  
   Visualizes both dependency trees and linear token-tag outputs using `Stanza` and `ParsBERT`.
@@ -37,7 +37,7 @@
 
 ---
 
-## 🚧 In Progress / Upcoming Features
+## In Progress / Upcoming Features
 
 - **Grammar Correction Module** using LLMs
 - **Real-time Transliteration** using contextual models
@@ -49,7 +49,7 @@
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend**: HTML, Bootstrap, JS
 - **Backend**: Python, Flask
@@ -59,5 +59,5 @@
 
 ---
 
-## 📁 Project Structure (Simplified)
+## Project Structure (Simplified)
 
